@@ -32,16 +32,16 @@ The method must have the correct number of arguments passed to it regardless of 
 
 ```ruby
 def introduction(str)
-	yield
-	str
+  yield
+  str
 end
 
 p introduction { puts 'Hello there, my name is Richard' } # => ARGUEMENTERROR: WRONG NUMBER OF ARGUMENTS
 ```
 
-#### `Yield` allows a developer to come in and add functionality to an existing method defintion without modifying the code directly 
+#### `Yield` allows a developer to add functionality to an existing method without modifying the definition.
 
-If you include the `yield` keyword in the method definition and do not pass in a block, Ruby will throw a `LocalJumpError`. This indicates to us that the method includes `yield` but has not has a block passed to it.
+If you include the `yield` keyword in the method definition and do not pass in a block, Ruby will throw a `LocalJumpError`. This indicates to us that the method includes `yield` but has not had a block passed to it.
 
 ```ruby
 def introduction(str)
@@ -54,9 +54,9 @@ p introduction('hello') # => LocalJumpError: no block given (yield)
 
 To make a passing a block into a method optional, we can include the conditional method `Kernel#block_given?`. 
 
-As this is method from the `Kernel` module and mixedin to the `Object` class, its available to all objects. 
+As this is method is from the `Kernel` module and mixedin to the `Object` class, its available to all objects. 
 
-From a practical standpoint, this means we're able to call the method both with and without a block.
+From a practical standpoint, this means we're able to call the method both with, and without, a block.
 
 ```ruby
 # No block given
