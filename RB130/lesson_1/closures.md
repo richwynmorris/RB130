@@ -77,3 +77,65 @@ p introduction('hello') { puts "Print if passed in to the method" } # "Print if 
                                                                     # => "hello"
 ```
 
+## Arity Rules With Blocks
+
+### What happens if you pass in the wrong number of arguments to a block?
+
+```ruby
+def test_method # Method Implementation
+	yield(1,2)
+end
+
+test_method { |number| puts number } # Method Invocation
+
+# Prints => 1
+```
+
+If you pass in the wrong number of block arguements, that arguments are ignored by the block parameter. 
+
+### What happens if you add more block parameters than there are arguments? 
+
+```ruby
+def test_method # Method Implementation
+  yield(1)
+end
+
+test_method { |number1, number2| puts "#{number1} #{number2}" } # Method Invocation
+
+# Prints => 1 
+```
+
+If you add additional block parameters to a block, Ruby will assign `nil` to the additional parameter which will be interpolated as ane empty space within a string. 
+
+
+KEY POINT: blocks don't enforce argument count unlike traditional methods.  
+
+## The Return Value of Yield
+
+A block will always produce a return value, which is the last evaluated expression in the block.
+
+This value can be assigned to a local variable contained within a method:
+
+```ruby
+def change_a_string(str)
+  puts "Original String: #{str}"
+  new_str = yield(str)
+  puts "Modified String: #{new_str}"
+end
+
+change_a_string('Hello'){ |str| str.upcase } 
+
+# => Original String: Hello
+#    Modified String: HELLO
+```
+
+## When to use blocks with your own methods
+
+The first case use, is that by using blocks with our methods, we can make our methods perform the general operation we want to take place but give us greater flexibility in how the method implementation is used. This gives us the ability to more highly refine how a method's operation is performed.
+
+Mental Model:
+
+Think of the `#select` method; the general case use is to select the values that return `true` when evaluated. The block allows us to more highly define, what should be considered `true`. 
+
+
+
