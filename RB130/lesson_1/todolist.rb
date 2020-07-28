@@ -117,8 +117,66 @@ class TodoList
     text << @todos.map(&:to_s).join("\n")
     text
   end
+  
+  def each
+    index = 0
+    while index < @todos.length
+      yield(@todos[index])
+      index += 1
+    end
+    self
+  end
+  
+  def select
+    new_list = TodoList.new('New List')
+    
+    @todos.each do |todo|
+      new_list.add(todo) if yield(todo)
+    end
+    
+    new_list
+  end
+    
+  # find_by_title
+  # takes a string as argument, and returns the first Todo object that matches the argument. 
+  # Return nil if no todo is found.
+  def find_by_title(string)
+    select { |todo| todo.title == string }.first    
+  end
+  
+  # all_done
+  # returns new TodoList object containing only the done items
+  def all_done
+    completed_todos = TodoList.new("Completed Todo's")
+    each { |todo| completed_todos.add(todo) if todo.done? }
+    completed_todos
+  end
+  
+  def all_not_done
+    incomplete_todos = TodoList.new("Incomplete Todo's")
+    each { |todo| incomplete_todos.add(todo) if todo.done == false}
+    incomplete_todos
+  end
+  
+  # mark_done
+  # takes a string as argument, and marks the first Todo object that matches the argument as done.
+  def mark_done(string)
+    find_by_title(string).done!
+  end
+  
+  # mark_all_done
+  # mark every todo as done
+  def mark_all_done
+    each {|todo| todo.done!}
+  end
+  
+  # mark_all_undone
+  # mark every todo as not done
+  def mark_all_undone
+    each {|todo| todo.undone!}
+  end
 end
-
+    
 # -------------------------------------------------
 
 todo1 = Todo.new("Buy milk")
@@ -130,12 +188,4 @@ list.add(todo1)
 list.add(todo2)
 list.add(todo3)
 
-puts list
-
-list.pop
-
-puts list
-
-list.mark_done_at(1)
-
-puts list
+todo1.done!
