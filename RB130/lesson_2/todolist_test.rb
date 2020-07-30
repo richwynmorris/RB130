@@ -1,3 +1,6 @@
+require 'simplecov'
+SimpleCov.start
+
 require 'minitest/autorun'
 require "minitest/reporters"
 Minitest::Reporters.use!
@@ -23,7 +26,7 @@ class TodoListTest < MiniTest::Test
   end
 
   def test_size
-    assert_equal(3, @todos.size)
+    assert_equal(3, @list.size)
   end
 
   def test_first
@@ -152,5 +155,65 @@ class TodoListTest < MiniTest::Test
 
     assert_equal(list.title, @list.title)
     assert_equal(list.to_s, @list.select{ |todo| todo.done? }.to_s)
+  end
+
+  def test_find_by_title
+    assert_equal(@todo1, @list.find_by_title('Buy milk'))
+  end
+
+  def test_all_done
+    @todo1.done!
+
+    selected_dones = TodoList.new(@list.title)
+    selected_dones.add(@todo1)
+
+    assert_equal(selected_dones.to_s, @list.all_done.to_s)
+  end
+
+  def test_all_not_done
+    selected_undone = TodoList.new(@list.title)
+    selected_undone.add(@todo1)
+    selected_undone.add(@todo2)
+    selected_undone.add(@todo3)
+
+    assert_equal(selected_undone.to_s, @list.all_not_done.to_s)
+  end
+
+  def test_mark_done
+    new_list = TodoList.new(@list.title)
+    new_list.add(@todo1)
+    new_list.mark_done_at(0)
+    @list.mark_done('Buy milk')
+    assert_equal(new_list.all_done.to_s, @list.all_done.to_s)  
+  end
+
+  def test_mark_all_done
+
+    new_list = TodoList.new(@list.title)
+
+    @todos.each do |todo|
+      new_list.add(todo)
+    end
+
+    new_list.each do |todo|
+      todo.done!
+    end
+
+    assert_equal(new_list.to_s, @list.mark_all_done.to_s)
+  end
+
+  def test_mark_all_undone
+
+    @list.mark_all_done
+
+    new_list = TodoList.new(@list.title)
+
+    @todos.each do |todo|
+      new_list.add(todo)
+    end
+
+    @list.mark_all_undone
+
+    assert_equal(new_list.to_s, @list.to_s)
   end
 end
