@@ -227,7 +227,7 @@ what_universe { puts "The universe is #{universe}"}
 
 Symbol#to_proc is used when we want to pass a block, that is defined as method, to another method. 
 
-To do this we use the `&` operator prepended to a Symbol and then finally a method definition name. 
+To do this we use the `&` operator prepended to a Symbol and then finally a method definition name. asweeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeed
 
 Firstly, the `&` operator takes the method and trys to convert it to a block. As it is not a block, ruby calls `to_proc` on the object. As the object is a symbol, it has it's own `Symbol#to_proc` method. The method body is then converted to a `proc` object and the `proc` object is then sent to the explict parameter which transforms it into a block. 
 
@@ -235,3 +235,143 @@ Firstly, the `&` operator takes the method and trys to convert it to a block. As
 [1,2,3,4].map(&:to_s)
 # => ['1','2','3','4']
 ```
+
+```ruby
+[1, 2, 3].each do |num|
+	puts num
+end
+```
+
+#### Describe in detail what is happening in the code above. What is the do..end block in relation to the Array#each method?
+
+On line 1, we have an aray object containing these integers. We have an invoked `each` method which has been called by the object. On lines 1 - 3, we have a `do`..`end` block which is passed implicitly to the method. The block contains a block parameter called `num`, `num` points to each object as the `each` method iterates through the array. The block provides additional flexibility for the `each` method. The block is executed and the value the block parameter is pointing at is passed to the `puts` method and the value is output and the return value is nil. At the end of iteration `each` returns the original calling object `[1,2,3]`.
+
+
+#### Why does a block sometimes affect the return value of a method and sometimes not?
+
+A block will sometimes affect the return value of a method as the block itself returns a value, which is the last executed expression in a block. This means the block may mutate of alter a variable's value which the method in turn may use in its opertation. 
+
+#### What is the difference between passing in a block to a method and passing in an argument?
+
+All methods can implicitly accept a block that is passed to it. It is up to the method implementation as to how the block is used. However, a method, if it explicitly requires an argument, through the use of a parameter, MUST be passsed in. If not, ruby will return an invalid argument errror. 
+
+#### How can you make sure that a method has access to a block? 
+
+You can pass the block to the method explicitly by prepending the '&' operator the the method parameter. When the block is then passed to the method, the block is converted to a simple `proc` object which then the method parameter points to. The proc object can then be executed using the `#call` method. Moreover, we can use a the handle to pass it another method or execute the block again at another time. 
+
+#### What does it mean when we see a LocalJumpError? 
+
+When you see a LocalJumpError, it indicates to us that the method that has been invoked contains the `yield` keyword. This means that the method must have a block passed to it for it to be executed. 
+
+```ruby
+def say(words)
+  yield if block_given?
+  puts "> " + words
+end
+
+say("hi there") do
+  system 'clear'
+end
+```
+
+#### In the code above, which part is the method invocation and which part is the method implementation? Why is this important to distinguish?
+
+Lines 267 - 270 are the method implementation. This means that these lines define, and execute, the operations for the method. On lines 272, we see the method invocation and the block which is passed implicitly as an argument to the method. This block allows the method implementation to be partly defered to the time of method invocation. As the block is then invoked by the method implementation, using the keyword `yield` on line 268. 
+
+#### What is a block parameter? A block local variable? 
+
+A block parameter is the the name of the object between the two pipes ||. The block local variable is where the same name is used within the block. This block local variable is constained to the scope of the block. 
+
+
+#### What is arity?
+Arity rules are the requirements for an object to function in relation to the correct number of arguments and parameters. Methods have string arity rules in relation to the correct number of arguments and parameters that the method contains. Blocks however are more flexible and will accept any number arguments you pass to it. Moreover, you do not need to fulfil the parameter requirements for the block either. It will simply set the value of any non initialized parameters to nil. 
+
+#### Can blocks mutate the argument?
+
+Yes they can, just like methods. Blocks will return the last evaluated expression within them so if they mutate the argument, this means the return value with a mutated result.
+
+#### What are the two roles involved with any method?
+To either mutate an argument or return a value. 
+
+#### Name two areas where before/after actions are important.
+
+* Time loging - Timing when something began and when it ended.
+* Resource Management - Opening and closing files to prevent memory leaks. 
+
+#### "Every method, regardless of its definition, takes an _______ ________."
+
+*Implicit block* 
+
+#### Why do we use #call instead of #yield to invoke a Proc object?
+
+We use call, as `#call` is a proc method, where as yield can only be used with an implicit block that is passed to the method. 
+
+#### Why is it useful to write a generic iterating method?
+
+It's useful to write a generic iterating method because we can specify exactly what we would like the implementation to be at the time of method invocation using a block. If we were to specify the use of the method exactly, we would have to write it in the method definition thereby limiting the functionality of the method. If we are able to defer the refinement to the time of invocation, we can use the method for the specific situation. This also indirectly allows us to achieve the DRY principle as we don't have to generate specific methods for each case. 
+
+#### What is an accumulator object?
+
+An accumulator object exists to to capture the return value of the block and assigns itself to it. 
+
+```ruby
+[1,2,3,4].reduce do |acc, num|
+	acc + num 
+end
+```
+
+#### Why build a custom collection class? Name at least 3 reasons.
+
+1) We can add additional attributes to the collection.
+2) We can provide additional behaviours for our class. 
+3) We can enforce requirements as to what should be contained with the collection. 
+
+#### Why is it preferred to implement a custom iterator? Name at least 3 reasons.
+1) We can deal with specific attributes that an instance of class might have.
+2) We're only dealing directly with the class public interface and not data from the class. (Encapsulation)
+3) If we change the object data that we're dealing with, within the instance itself, we have to change the method 
+implementation. However, if we define our own custom iterator that iterates over a specific class, it no longer matters
+if we need to change how the data is being used within the class. 
+
+#### Why is it important to use the class's interface when possible? 
+
+It is important to use a class' interface where possible as we only want to deal with the object itself, not data and states contained within the object. This achieves encapsulation and means we can contain any rippling effects that might be produced by altering the object's state. 
+
+#### Why is it important to be aware if something is a method or a local variable?
+
+It's important to be aware as they may look similar in our code. Methods can be called from anywhere, however, local variables have a specific scope and can only be accessed at the scope they were intialzed at. To find out whether something is either a method or a local variable, always look for the scope it is initialized at. 
+
+#### Why would we use a closure instead of defining a method?
+
+We can use a closure instead a method as it provides us with additional flexibility. We can also pass a closure to a method to defer some implmentation to the time of method invocation. We can do this either implicitly of explicitly. 
+
+#### What is a binding in reference to a closure?
+
+A binding is how a closure uses the scope it is initialized in to make reference to its surrounding artifacts be them local variables, objects methods etc. This is like the surrounding context or universe of the block. 
+
+
+#### Provide example code the illustrates the relationship between blocks and return values.
+
+```ruby
+
+def sing
+	puts yield
+end
+
+sing do 
+	"Jingle bells"
+	"Batman smells"
+end
+
+# => "Batman smells"
+```
+
+
+#### Explain what happens when &:a_symbol is passed as an argument to a method.
+
+When &:a_symbol is passed to a method, ruby first tries to convert the object from a block to a proc, if it cannot do this. It calls the Symbol#to_proc method. This then converts the block contained within the method which the symbol is referencing into a block object, The `&` ampersand then converts the block object in a project object. If it cannot convert the block to a proc it throws an error. 
+
+ 
+
+
+
