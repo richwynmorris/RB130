@@ -135,6 +135,46 @@ Teardown - stands for cleaning up any of files or data being used in the tests.
 
 ### What is the purpose of the setup method?
 
-The purpose of the setup method is to set up instance variables that are instantiated from the class that is being tested. These instance variables can then be used by the instance test methods in the testing suite. The setup method is run before any tests are executed.  
+The purpose of the setup method is to set up instance variables that are instantiated from the class that is being tested. These instance variables can then be used by the instance test methods in the testing suite. The setup method is run before any tests are executed. 
+
+### What is the purpose of the teardown method? 
+
+The purpose of the teardown method is close any files that are in use to prevent memory leaks, log information and clean up files. The teardown method is called after all the tests from the test suite have been run. 
+
+### - `assert`
+
+`assert` checks if the return value is `true`. If it is, it passes the test.
+
+### - `assert_equal`
+
+`assert_equal` checks if the expected object is equal to that of the return value from the method.
+
+### - `assert_nil`
+
+`assert_nil` checks if the return value of the method is nil. If it is, it passes.
+
+### - `assert_raises`
+
+`assert_raises` checks if the intended exception is raised when the method is invoked. If it is, it passes the test.
+
+### - `assert_instance_of`
+
+`assert_instance_of` checks if the return value from the method is an instance of the expected class. If it is, it passes.
+
+### - `assert_includes`
+`assert_includes` checcks to see if the return value from the method is included in the expected collection.
+
+
+### What do refute methods do ?
+
+Refute methods do the opposite of what assert methods do and only pass the test if the value is not as is expected.
+
+### When we use assert_equal, what are we testing for?
+
+When we use `assert_equal` we're checking that the value of expected object, is the same as the value returned by the method.
+
+### What assert method do we use when we're looking for string object equality.
+
+`asssert_same` checks that both objects are the same object. 
 
 
