@@ -61,14 +61,38 @@ To add a gem we simply use the `gem` keyword followed by the gem name that we wa
 
 We then call the command `bundler install` in the terminal, it reads the `Gemfile` and adds the required dependencies. It then produces the `Gemfile.lock` file which contains all the dependecy information for your app and any other additional dependency information that was downloaded as a result. If you change the Gemfile, you will need to rerun the `bundle install` command again. 
 
-
 We can use `bundle exec` to resolve any dependency conflicts when issuing commands. This usually occurs when you use a Gem command that different from the version required in the `Gemfile`. 
 
+#### What is Rake?
 
+Rake is a Rubygem that automates many common functions requried to build, test, package and install a program. 
 
+#### What does Rake do?
 
+Rake can autmate anything you want it to. Some examples of Rake being used could be to:
 
+* Install applications
+* Testing
+* Perform Git tasks 
+* Setup and initialize databases.
+* Setup a required environment by making files and directories. 
 
+#### How do you set up and use Rake?
+
+Rake uses a file called `Rakefile` that is contained within your directory. The `Rakefile` describes the tasks that can be performed and how to perform those tasks.
+
+A task called `default` in the `Rakefile` is called the default task. This task will be invoked if no other task is specified when running Rake.
+
+Rake uses a DSL to describe the tasks and how to perform them.
+
+Rake can group tasks and run them in combination with one another. 
+
+```ruby
+desc 'Do everything'
+task :default => [:hello, :bye]
+```
+
+####  
 
 
 
