@@ -1,8 +1,10 @@
 class Crypto
+
   def initialize(input)
     @input = input
     @segments = []
-    @ciphered_text = []
+    @ciphered_text = ''
+    @normalized_ciphered_text = []
   end
 
   def normalize_plaintext
@@ -18,8 +20,8 @@ class Crypto
     self.size
     string = normalize_plaintext.dup
 
-    until string.empty?
-      @segments << string.slice!(0..@column - 1)
+    string.chars.each_slice(@column) do |slice|
+      @segments << slice.join
     end
 
     @segments
@@ -29,20 +31,27 @@ class Crypto
     self.plaintext_segments
     count = 0
 
-    loop do
-      break if count == @segments[0].length - 1
+    until count == @segments[0].length
       @segments.each do |word|
-        break if word[count] == nil
-        @ciphered_word = ''
-        @ciphered_word << word[count]
+        next if word[count] == nil
+        @ciphered_text << word[count]
       end
-      @ciphered_text << [@ciphered_word]
       count += 1
     end
+    @ciphered_text
+  end
 
-    @ciphered_text.flatten.join
+  def normalize_ciphertext
+    self.ciphertext
+
+    cipher_text = ''
+    @column.times do |column|
+      @segments.each do |row|
+        cipher_text << (row[column] || '')
+      end
+      cipher_text << ' '
+    end
+    cipher_text.rstrip
   end
 end
 
-crypto = Crypto.new('Time is an illusion. Lunchtime doubly so.')
-crypto.ciphertext
