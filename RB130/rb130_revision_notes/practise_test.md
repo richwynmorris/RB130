@@ -89,6 +89,9 @@ The last expression in the method `array` which references our oringinal array o
 This array object, which is returned by the `each` method is the object which the `select` method, on line 68, uses to iterate over the values. The block is passed to the select method which returns a new array object with the values that are odd. These are `[1,3,5]`. This is then returned by the select method.
 
 
+
+## Explain what the output of the below will be ? Why is this the output?
+
 ```ruby
 def exclaim(array, &block) 
   value = '!'
